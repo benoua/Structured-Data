@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from keras.preprocessing.image import array_to_img
 from keras.preprocessing.text import Tokenizer
 from scipy.misc import imresize
+import warnings
 import numpy as np
 
 from alphanum_symbols import char2ix
@@ -13,9 +14,9 @@ IMAGE_DIMENSIONS = (32, 100)
 # IMAGE_DIMENSIONS = (10, 30)
 
 
-def get_image_paths():
+def get_image_paths(base_dir):
     image_paths = []
-    for root, dirs, files in os.walk('mjsynth/'):
+    for root, dirs, files in os.walk(base_dir):
         for file in files:
             if 'DS_Store' in file:
                 continue
@@ -49,7 +50,11 @@ class TextTransform(object):
         return self.tokenizer.texts_to_matrix(word.ljust(SEQUENCE_LENGTH).lower())
 
     def word_from_matrix(self, m):
-        return ''.join([self.inv_vocabulary[l] for l in m.argmax(axis=1)])
+        try:
+            return ''.join([self.inv_vocabulary[l] for l in m.argmax(axis=1)])
+        except KeyError:
+            warnings.warn("missing char")
+            return ''
 
     def make_batch_labels(self, image_paths):
         names = [word_from_image_path(filename).lower() for filename in image_paths]
