@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from keras.preprocessing.image import array_to_img
 from keras.preprocessing.text import Tokenizer
 from scipy.misc import imresize
+import numpy as np
 
 from alphanum_symbols import char2ix
 
@@ -48,3 +49,7 @@ class TextTransform(object):
 
     def word_from_matrix(self, m):
         return ''.join([self.inv_vocabulary[l] for l in m.argmax(axis=1)])
+
+    def make_batch_labels(self, image_paths):
+        names = [word_from_image_path(filename).lower() for filename in image_paths]
+        return np.array([self.transform(name) for name in names])
