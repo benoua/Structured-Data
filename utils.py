@@ -9,8 +9,8 @@ from alphanum_symbols import char2ix
 
 N_CHARS = 37
 SEQUENCE_LENGTH = 23
-# IMAGE_DIMENSIONS = (32, 100)
-IMAGE_DIMENSIONS = (10, 30)
+IMAGE_DIMENSIONS = (32, 100)
+# IMAGE_DIMENSIONS = (10, 30)
 
 
 def get_image_paths():
