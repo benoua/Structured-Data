@@ -35,7 +35,7 @@ char2ix = {
     'x': 33,
     'y': 34,
     'z': 35,
-    '': 36,
+    ' ': 36,
 }
 
 ix2char = {v: k for k, v in char2ix.items()}

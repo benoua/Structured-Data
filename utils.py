@@ -39,12 +39,12 @@ def print_im(im):
 
 class TextTransform(object):
     def __init__(self):
-        self.tokenizer = Tokenizer(nb_words=SEQUENCE_LENGTH, char_level=True)
-        self.tokenizer.fit_on_texts([''.join(char2ix.keys())])
+        self.tokenizer = Tokenizer(nb_words=N_CHARS, char_level=True)
+        self.tokenizer.fit_on_texts([''.join(char2ix)])
         self.inv_vocabulary = {v: k for k, v in self.tokenizer.word_index.items()}
 
     def transform(self, word):
-        return self.tokenizer.texts_to_matrix(word.ljust(N_CHARS).lower())
+        return self.tokenizer.texts_to_matrix(word.ljust(SEQUENCE_LENGTH).lower())
 
     def word_from_matrix(self, m):
-        ''.join([self.inv_vocabulary[l] for l in m.argmax(axis=1)])
+        return ''.join([self.inv_vocabulary[l] for l in m.argmax(axis=1)])
