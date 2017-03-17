@@ -20,6 +20,8 @@ def get_image_paths(base_dir):
         for file in files:
             if 'DS_Store' in file:
                 continue
+            if file.endswith('.txt'):
+                continue
             image_paths.append(os.path.join(root, file))
     return image_paths
 
