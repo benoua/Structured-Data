@@ -15,9 +15,9 @@ def get_image_paths():
 
 
 def word_from_image_path(image_path):
-    try :
+    try:
         out = image_path.split("_")[1]
-    except :
+    except:
         out = None
     return out
 
