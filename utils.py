@@ -108,11 +108,12 @@ class NgramTransform(object):
             warnings.warn("missing char")
             return ''
 
-    def make_batch_labels(self, image_paths):
+    def make_batch_labels(self, image_paths, sparse = True):
         """
 
+        :param sparse: if True, return sparse matrix, else arrays
         :param image_paths: path of images
         :return: list of all N-grams for all images names.
         """
         names = [word_from_image_path(filename).lower() for filename in image_paths]
-        return np.array([self.transform(name) for name in names])
+        return np.array([self.transform(name, sparse) for name in names])
