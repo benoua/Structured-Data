@@ -5,6 +5,7 @@ from keras.preprocessing.text import Tokenizer
 from scipy.misc import imresize
 import warnings
 import numpy as np
+import pickle
 
 from alphanum_symbols import char2ix
 
