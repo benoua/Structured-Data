@@ -31,7 +31,7 @@ def get_image_paths(base_dir):
 
 def word_from_image_path(image_path):
     try:
-        out = image_path.split("_")[1]
+        out = image_path.split("_")[2]
     except:
         out = None
     return out
@@ -85,12 +85,13 @@ class NgramTransform(object):
 
         :param word: string (one word at a time)
         :param sparse: if True, return sparse matrix, otherwise, numpy array
-        :return: matrix with idx of Ngrams
+        :return: vector with 1 on idx if presence of this N-gram
         """
         if sparse == True:
             return self.cv.transform([word.lower()])
         else :
-            return self.cv.transform([word.lower()]).toarray()
+            out = self.cv.transform([word.lower()]).toarray()
+            return out > 0 #convert to bolean vector
 
 
     def ngram_from_matrix(self, m):
