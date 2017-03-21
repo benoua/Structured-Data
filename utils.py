@@ -31,7 +31,7 @@ def get_image_paths(base_dir):
 
 def word_from_image_path(image_path):
     try:
-        out = image_path.split("_")[2]
+        out = image_path.split("_")[1]
     except:
         out = None
     return out
