@@ -5,12 +5,16 @@ from keras.preprocessing.text import Tokenizer
 from scipy.misc import imresize
 import warnings
 import numpy as np
+import pickle
+from scipy.sparse import issparse
 
 from alphanum_symbols import char2ix
 
 N_CHARS = 37
 SEQUENCE_LENGTH = 23
 IMAGE_DIMENSIONS = (32, 100)
+
+
 # IMAGE_DIMENSIONS = (10, 30)
 
 
@@ -87,6 +91,54 @@ def send_email(user, pwd, recipient, subject, body):
         server.login(gmail_user, gmail_pwd)
         server.sendmail(FROM, TO, message)
         server.close()
-        print ('successfully sent the mail')
+        print('successfully sent the mail')
     except:
         print("failed to send mail")
+
+
+class NgramTransform(object):
+    def __init__(self):
+        """
+        Class that convert words to 10k most used N-grams in synth90k.
+        """
+        self.cv = pickle.load(open("cv.pkl", "rb"))
+        self.vocabulary = self.cv.vocabulary_
+        self.inv_vocabulary = {v: k for k, v in self.cv.vocabulary_.items()}
+
+    def transform(self, word, sparse=True):
+        """
+
+        :param word: string (one word at a time)
+        :param sparse: if True, return sparse matrix, otherwise, numpy array
+        :return: vector with 1 on idx if presence of this N-gram
+        """
+        if sparse == True:
+            return self.cv.transform([word.lower()])
+        else:
+            out = self.cv.transform([word.lower()]).toarray()
+            return out > 0  # convert to bolean vector
+
+    def ngram_from_matrix(self, m):
+        """
+
+        :param m: flat matrix
+        :return: list of N-grams
+        """
+        if issparse(m):
+            m = m.toarray()[0]
+        idx_ngrams = np.where(m == 1)[0]
+        try:
+            return [self.inv_vocabulary[l] for l in idx_ngrams]
+        except KeyError:
+            warnings.warn("missing char")
+            return ''
+
+    def make_batch_labels(self, image_paths, sparse=True):
+        """
+
+        :param sparse: if True, return sparse matrix, else arrays
+        :param image_paths: path of images
+        :return: list of all N-grams for all images names.
+        """
+        names = [word_from_image_path(filename).lower() for filename in image_paths]
+        return np.array([self.transform(name, sparse) for name in names])
