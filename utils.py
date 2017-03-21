@@ -28,7 +28,7 @@ def get_image_paths(base_dir):
 
 def word_from_image_path(image_path):
     try:
-        out = image_path.split("_")[1]
+        out = image_path.split("_")[-2]
     except:
         out = None
     return out
@@ -61,3 +61,32 @@ class TextTransform(object):
     def make_batch_labels(self, image_paths):
         names = [word_from_image_path(filename).lower() for filename in image_paths]
         return np.array([self.transform(name) for name in names])
+
+
+def my_send_mail(subject, body):
+    user = 'api.maxbellec'
+    pwd = 'apiApisendmail'
+    send_email(user, pwd, user, subject, body)
+
+
+def send_email(user, pwd, recipient, subject, body):
+    import smtplib
+
+    gmail_user = user
+    gmail_pwd = pwd
+    FROM = user
+    TO = recipient if type(recipient) is list else [recipient]
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), subject, body)
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(gmail_user, gmail_pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        print ('successfully sent the mail')
+    except:
+        print("failed to send mail")
