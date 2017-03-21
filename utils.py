@@ -142,3 +142,38 @@ class NgramTransform(object):
         """
         names = [word_from_image_path(filename).lower() for filename in image_paths]
         return np.array([self.transform(name, sparse) for name in names])
+
+
+def load_trained_CNN_weights(p_model):
+    """
+
+    :param p_model: trained parallele model to import
+    :return: CNN model with weights of // model
+    """
+    from keras.models import load_model
+    cnn = load_model(p_model)
+
+    try:
+        cnn_empty = load_model('model_random_weights.keras')
+    except KeyError:
+        warnings.warn("model_random_weights.keras not in folder")
+    all_weights = cnn.layers[5].get_weights()
+
+
+    saved_weights = {}
+    for i in range(5):
+        saved_weights['convo{}'.format(i)] = [all_weights[i * 2], all_weights[i * 2 + 1]]
+    for i in range(3):
+        saved_weights['dense_{}'.format(i + 3)] = [all_weights[10 + i * 2], all_weights[10 + i * 2 + 1]]
+
+    layers_names = ['convo0', 'convo1', 'convo2', 'convo3', 'convo4', 'dense_3', 'dense_4', 'dense_5', ]
+
+    # setting weights of each layers
+    try:
+        for layer_name in layers_names:
+            layer = cnn_empty.get_layer(name=layer_name)
+            layer.set_weights(saved_weights[layer_name])
+    except KeyError:
+        warnings.warn("wrong model")
+    return cnn_empty
+
