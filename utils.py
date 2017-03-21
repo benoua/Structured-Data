@@ -101,7 +101,8 @@ class NgramTransform(object):
         """
         Class that convert words to 10k most used N-grams in synth90k.
         """
-        self.cv = pickle.load(open("cv.pkl", "rb"))
+        self.cv = pickle.load(open("cv2.pkl", "rb"))
+        self.X_tf = np.array(pickle.load(open("Xtf.pkl", "rb")))[0]
         self.vocabulary = self.cv.vocabulary_
         self.inv_vocabulary = {v: k for k, v in self.cv.vocabulary_.items()}
 
