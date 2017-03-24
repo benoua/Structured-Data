@@ -155,9 +155,9 @@ def load_trained_CNN_weights(p_model, dense_layer=True):
     cnn = load_model(p_model)
 
     try:
-        cnn_empty = load_model('model_random_weights.keras')
+        cnn_empty = load_model('model_pretrained_weights.keras')
     except KeyError:
-        warnings.warn("model_random_weights.keras not in folder")
+        warnings.warn("model_pretrained_weights.keras not in folder")
     all_weights = cnn.layers[5].get_weights()
 
 
