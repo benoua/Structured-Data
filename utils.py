@@ -148,7 +148,7 @@ class NgramTransform(object):
 def load_trained_CNN_weights(p_model):
     """
 
-    :param p_model: trained parallele model to import
+    :param p_model: trained parallel model to import
     :return: CNN model with weights of // model
     """
     from keras.models import load_model
@@ -178,3 +178,12 @@ def load_trained_CNN_weights(p_model):
         warnings.warn("wrong model")
     return cnn_empty
 
+def plot_batch_images(x,y):
+    plt.figure(figsize=(10,5))
+    idxs = np.random.randint(0, x.shape[0], 20)
+    tt = NgramTransform()
+    for i,idx in enumerate(idxs):
+        plt.subplot(4, 5, i + 1)
+        plt.imshow(x[idx], cmap='gray')
+        plt.axis('off')
+        plt.title(tt.word_from_matrix(y[idx]))
