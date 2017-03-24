@@ -181,7 +181,9 @@ def load_trained_CNN_weights(p_model):
 def plot_batch_images(x,y):
     plt.figure(figsize=(10,5))
     idxs = np.random.randint(0, x.shape[0], 20)
-    tt = NgramTransform()
+
+    with open('/datadrive/tt_new.pickle', 'rb') as f:
+        tt = pickle.load(f)
     for i,idx in enumerate(idxs):
         plt.subplot(4, 5, i + 1)
         plt.imshow(x[idx], cmap='gray')
