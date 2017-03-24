@@ -145,7 +145,7 @@ class NgramTransform(object):
         return np.array([self.transform(name, sparse) for name in names])
 
 
-def load_trained_CNN_weights(p_model):
+def load_trained_CNN_weights(p_model, dense_layer=True):
     """
 
     :param p_model: trained parallel model to import
@@ -165,9 +165,12 @@ def load_trained_CNN_weights(p_model):
     for i in range(5):
         saved_weights['convo{}'.format(i)] = [all_weights[i * 2], all_weights[i * 2 + 1]]
     for i in range(3):
-        saved_weights['dense_{}'.format(i + 3)] = [all_weights[10 + i * 2], all_weights[10 + i * 2 + 1]]
+        saved_weights['Dense{}'.format(i + 1)] = [all_weights[10 + i * 2], all_weights[10 + i * 2 + 1]]
 
-    layers_names = ['convo0', 'convo1', 'convo2', 'convo3', 'convo4', 'dense_3', 'dense_4', 'dense_5', ]
+    if dense_layer == True:
+        layers_names = ['convo0', 'convo1', 'convo2', 'convo3', 'convo4', 'Dense1', 'Dense2', 'Dense3', ]
+    elif dense_layer == False:
+        layers_names = ['convo0', 'convo1', 'convo2', 'convo3', 'convo4', ]
 
     # setting weights of each layers
     try:
