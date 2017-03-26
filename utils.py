@@ -192,3 +192,43 @@ def plot_batch_images(x,y):
         plt.imshow(x[idx], cmap='gray')
         plt.axis('off')
         plt.title(tt.word_from_matrix(y[idx]))
+
+def base_cnn_in_keras():
+    from keras.models import Sequential
+    from keras.layers import Conv2D, MaxPooling2D, Dropout, Dense, Reshape, Activation
+    from keras.layers import Flatten
+
+    convolutions = [64, 128, 256, 512, 512]
+    kernels = [3, 3, 3, 3, 3]
+
+    model = Sequential()
+    input_shape = (None,) + IMAGE_DIMENSIONS + (1,)
+
+    model.add(Conv2D(nb_filter=64,
+                     nb_row=kernels[0],
+                     nb_col=kernels[0],
+                     activation='relu',
+                     border_mode='same',
+                     batch_input_shape=input_shape, name="convo" + str(0)))
+
+    model.add(MaxPooling2D(pool_size=(2, 2), border_mode='same'))
+
+    for i, (kernel, convolution_size) in enumerate(zip(kernels[1:], convolutions[1:])):
+        model.add(Conv2D(nb_filter=convolution_size,
+                         nb_row=kernel,
+                         nb_col=kernel,
+                         activation='relu',
+                         border_mode='same',
+                         name="convo" + str(i + 1)))
+
+        if i <= 1:
+            model.add(MaxPooling2D(pool_size=(2, 2), border_mode='same', ))
+
+    model.add(Flatten())
+    # model.add(Dense(128, activation='relu'))
+    model.add(Dense(4096, activation='relu', name="Dense1"))
+    model.add(Dropout(0.5))
+    model.add(Dense(4096, activation='relu', name="Dense2"))
+    model.add(Dropout(0.5))
+
+    return model
