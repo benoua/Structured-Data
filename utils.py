@@ -181,17 +181,27 @@ def load_trained_CNN_weights(p_model, dense_layer=True):
         warnings.warn("wrong model")
     return cnn_empty
 
-def plot_batch_images(x,y):
+def plot_batch_images(x,y, name=None, predictions=None):
     plt.figure(figsize=(10,5))
     idxs = np.random.randint(0, x.shape[0], 20)
 
-    with open('/datadrive/tt_new.pickle', 'rb') as f:
-        tt = pickle.load(f)
+
+
+    if name=="benoit":
+        with open('tt_new.pickle', 'rb') as f:
+            tt = pickle.load(f)
+    else :
+        with open('/datadrive/tt_new.pickle', 'rb') as f:
+            tt = pickle.load(f)
+
     for i,idx in enumerate(idxs):
         plt.subplot(4, 5, i + 1)
         plt.imshow(x[idx], cmap='gray')
         plt.axis('off')
-        plt.title(tt.word_from_matrix(y[idx]))
+        if predictions == None:
+            plt.title(y[idx])
+        else:
+            plt.title(tt.word_from_matrix(y[idx]))
 
 def base_cnn_in_keras():
     from keras.models import Sequential
