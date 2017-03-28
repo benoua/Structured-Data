@@ -242,3 +242,21 @@ def base_cnn_in_keras():
     model.add(Dropout(0.5))
 
     return model
+
+def raw2gray(im):
+    """
+        Convert a raw image to its grayscale image between 0 and 1.
+
+        Arguments:
+            - im : raw 2D image
+
+        Returns:
+            - im_gray : grayscale 2D image
+    """
+    # average all RGB channels
+    im_gray = im.mean(axis=2)
+
+    # normalize the image between 0 and 1
+    im_gray = (im_gray - im_gray.min()) / (im_gray.max() - im_gray.min())
+
+    return im_gray
